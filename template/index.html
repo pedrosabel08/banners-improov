@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width={{WIDTH}}, initial-scale=1" />
+    <meta name="ad.size" content="width={{WIDTH}},height={{HEIGHT}}" />
+    <title>{{CREATIVE_ID}}</title>
+    <script type="text/javascript">
+      var clickTag = {{CLICK_TAG}};
+    </script>
+    <style type="text/css">
+      {{CSS}}
+    </style>
+  </head>
+  <body class="size-{{SIZE_ID}}" style="--video-specific-extra-top: {{VIDEO_OVERSCAN_TOP}}px; --video-specific-extra-bottom: {{VIDEO_OVERSCAN_BOTTOM}}px">
+    <a
+      class="click-through"
+      href="javascript:window.open(window.clickTag, '_blank')"
+      aria-label="{{ARIA_LABEL}}"
+    >
+      <div id="container">
+        <video
+          class="background-video"
+          autoplay
+          muted
+          loop
+          playsinline
+          aria-hidden="true"
+        >
+          <source src="video.mp4" type="video/mp4" />
+        </video>
+        <div class="content">
+          <img class="brand-logo" src="logo.gif" alt="{{LOGO_ALT}}" />
+          <h1 class="headline">{{HEADLINE}}</h1>
+          <span class="cta">{{CTA}}</span>
+        </div>
+      </div>
+    </a>
+  </body>
+</html>

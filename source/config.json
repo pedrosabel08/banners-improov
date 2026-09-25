@@ -1,0 +1,68 @@
+{
+  "clickTag": "https://improov.com.br/",
+  "logo": {
+    "file": "IMPROOV_TOP.gif",
+    "alt": "Improov"
+  },
+  "videos": [
+    { "id": "V01", "file": "animacao-2-alp-sc-conceito-1080.mp4" },
+    { "id": "V02", "file": "animacao-6-aya-kar-piscina-maior-1080.mp4" },
+    { "id": "V03", "file": "animacao-gt-lac-tracking-0044-1080.mp4" },
+    { "id": "V04", "file": "fg-talls-f-1-1080.mp4" },
+    { "id": "V05", "file": "hsa-mon-tracking-0038-lazer-ai-slow-down-1080.mp4" }
+  ],
+  "videoHeightOffsets": {
+    "V04": 80
+  },
+  "texts": [
+    {
+      "id": "F01",
+      "headline": "Você constrói o extraordinário. Faça o mercado perceber.",
+      "cta": "Conheça a Improov"
+    },
+    {
+      "id": "F02",
+      "headline": "Você investiu em cada detalhe. Mostre por quê.",
+      "cta": "Explore os projetos"
+    },
+    {
+      "id": "F03",
+      "headline": "Seu projeto é único. A comunicação também deveria ser.",
+      "cta": "Veja os projetos"
+    },
+    {
+      "id": "F04",
+      "headline": "Antes de construir, faça sentir.",
+      "cta": "Explore o portfólio"
+    },
+    {
+      "id": "F05",
+      "headline": "Dê ao comercial uma história que vale contar.",
+      "cta": "Veja como pensamos"
+    },
+    {
+      "id": "F06",
+      "headline": "Quanto vale uma arquitetura que não é percebida?",
+      "cta": "Descubra a Improov"
+    }
+  ],
+  "sizes": [
+    { "id": "300x250", "width": 300, "height": 250 },
+    { "id": "728x90", "width": 728, "height": 90, "videoHeight": 120 },
+    { "id": "320x480", "width": 320, "height": 480 },
+    { "id": "970x250", "width": 970, "height": 250 },
+    { "id": "300x600", "width": 300, "height": 600 },
+    { "id": "320x100", "width": 320, "height": 100 }
+  ],
+  "focalPoints": {
+    "V01": {},
+    "V02": {},
+    "V03": {},
+    "V04": {},
+    "V05": {}
+  },
+  "render": {
+    "crf": 21,
+    "preset": "medium"
+  }
+}

@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=300, initial-scale=1" />
+    <meta name="ad.size" content="width=300,height=250" />
+    <title>V01_F04_300x250</title>
+    <script type="text/javascript">
+      var clickTag = "https://improov.com.br/";
+    </script>
+    <style type="text/css">
+      /* Base: cada preset abaixo controla independentemente o enquadramento do conteúdo. */
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+.click-through,
+#container {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  color: #fff;
+}
+.click-through {
+  text-decoration: none;
+}
+#container {
+  overflow: hidden;
+  isolation: isolate;
+  background: #20262c;
+}
+.background-video {
+  position: absolute;
+  z-index: -2;
+  top: calc(0px - var(--format-video-extra-top, 0px) - var(--video-specific-extra-top, 0px));
+  right: 0;
+  bottom: auto;
+  left: 0;
+  width: 100%;
+  height: calc(
+    100% + var(--format-video-extra-top, 0px) + var(--format-video-extra-bottom, 0px) +
+      var(--video-specific-extra-top, 0px) + var(--video-specific-extra-bottom, 0px)
+  );
+  object-fit: cover;
+  object-position: top;
+}
+.brand-logo {
+  /* position: absolute; */
+  z-index: 1;
+  top: var(--logo-offset-top);
+  left: var(--logo-offset-left);
+  width: var(--logo-width);
+  max-height: var(--logo-max-height);
+  object-fit: contain;
+  filter: drop-shadow(0 1px 3px rgb(0 0 0 / 75%));
+}
+#container::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: var(--overlay);
+}
+.content {
+  position: absolute;
+  inset: var(--content-inset);
+  display: flex;
+  flex-direction: var(--flex-direction);
+  justify-content: var(--content-justify);
+  align-items: var(--content-align);
+  gap: var(--content-gap);
+  text-align: var(--text-align);
+}
+.headline {
+  max-width: var(--headline-width);
+  margin: 0;
+  color: #fff;
+  font-size: var(--headline-size);
+  font-weight: 700;
+  line-height: var(--headline-leading);
+  letter-spacing: var(--headline-spacing);
+  text-wrap: pretty;
+  text-shadow: 0 1px 3px rgb(0 0 0 / 32%);
+}
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--cta-height);
+  padding: var(--cta-padding);
+  border: var(--cta-border);
+  border-radius: var(--cta-radius);
+  background: var(--cta-background);
+  color: var(--cta-color);
+  font-size: var(--cta-size);
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* 300x250: formato compacto, conteúdo concentrado na base esquerda. */
+.size-300x250 {
+  --logo-offset-top: -6px;
+  --logo-offset-left: -4px;
+  --logo-width: 112px;
+  --logo-max-height: 32px;
+  --content-inset: 20px;
+  --content-justify: space-between;
+  --content-align: flex-start;
+  --flex-direction: column;
+  --text-align: left;
+  --content-gap: 13px;
+  --headline-width: 260px;
+  --headline-size: 24px;
+  --headline-leading: 1.12;
+  --headline-spacing: -0.35px;
+  --cta-height: 34px;
+  --cta-padding: 0 14px;
+  --cta-size: 12px;
+  --cta-radius: 3px;
+  --cta-border: 0;
+  --cta-background: #fff;
+  --cta-color: #192129;
+  --overlay: linear-gradient(
+    0deg,
+    rgb(0 0 0 / 76%) 0%,
+    rgb(0 0 0 / 35%) 53%,
+    rgb(0 0 0 / 4%) 100%
+  );
+}
+/* 728x90: faixa horizontal com texto e CTA em uma única linha visual. */
+.size-728x90 {
+  --format-video-extra-top: 15px;
+  --format-video-extra-bottom: 15px;
+  --logo-offset-top: -27px;
+  --logo-offset-left: -10px;
+  --logo-width: 100px;
+  --logo-max-height: 24px;
+  --content-inset: 20px 22px;
+  --content-justify: center;
+  --content-align: center;
+  --flex-direction: row;
+  --text-align: left;
+  --content-gap: 12px;
+  --headline-width: 490px;
+  --headline-size: 21px;
+  --headline-leading: 1.08;
+  --headline-spacing: -0.2px;
+  --cta-height: 34px;
+  --cta-padding: 0 13px;
+  --cta-size: 11px;
+  --cta-radius: 3px;
+  --cta-border: 0;
+  --cta-background: #fff;
+  --cta-color: #192129;
+  --overlay: linear-gradient(
+    90deg,
+    rgb(0 0 0 / 77%) 0%,
+    rgb(0 0 0 / 48%) 66%,
+    rgb(0 0 0 / 10%) 100%
+  );
+}
+
+/* 320x480: retrato com margem ampla e texto na base. */
+.size-320x480 {
+  --logo-offset-top: -7px;
+  --logo-offset-left: -7px;
+  --logo-width: 118px;
+  --logo-max-height: 31px;
+  --content-inset: 25px;
+  --content-justify: space-between;
+  --content-align: flex-start;
+  --flex-direction: column;
+  --text-align: left;
+  --content-gap: 17px;
+  --headline-width: 270px;
+  --headline-size: 31px;
+  --headline-leading: 1.1;
+  --headline-spacing: -0.5px;
+  --cta-height: 42px;
+  --cta-padding: 0 17px;
+  --cta-size: 14px;
+  --cta-radius: 3px;
+  --cta-border: 0;
+  --cta-background: #fff;
+  --cta-color: #192129;
+  --overlay: linear-gradient(
+    0deg,
+    rgb(0 0 0 / 80%) 0%,
+    rgb(0 0 0 / 34%) 58%,
+    rgb(0 0 0 / 9%) 100%
+  );
+}
+/* 970x250: faixa ampla; largura generosa para headlines longas. */
+.size-970x250 {
+  --logo-offset-top: -12px;
+  --logo-offset-left: -18px;
+  --logo-width: 132px;
+  --logo-max-height: 34px;
+  --content-inset: 27px 38px;
+  --content-justify: space-between;
+  --content-align: center;
+  --flex-direction: row;
+  --text-align: left;
+  --content-gap: 19px;
+  --headline-width: 710px;
+  --headline-size: 32px;
+  --headline-leading: 1.1;
+  --headline-spacing: -0.55px;
+  --cta-height: 42px;
+  --cta-padding: 0 18px;
+  --cta-size: 14px;
+  --cta-radius: 3px;
+  --cta-border: 0;
+  --cta-background: #fff;
+  --cta-color: #192129;
+  --overlay: linear-gradient(
+    90deg,
+    rgb(0 0 0 / 78%) 0%,
+    rgb(0 0 0 / 43%) 65%,
+    rgb(0 0 0 / 7%) 100%
+  );
+}
+/* 300x600: retrato alto com área de leitura mais ampla. */
+.size-300x600 {
+  --logo-offset-top: -5px;
+  --logo-offset-left: -5px;
+  --logo-width: 124px;
+  --logo-max-height: 32px;
+  --content-inset: 25px;
+  --content-justify: space-between;
+  --content-align: flex-start;
+  --flex-direction: column;
+  --text-align: left;
+  --content-gap: 18px;
+  --headline-width: 250px;
+  --headline-size: 30px;
+  --headline-leading: 1.12;
+  --headline-spacing: -0.45px;
+  --cta-height: 40px;
+  --cta-padding: 0 16px;
+  --cta-size: 13px;
+  --cta-radius: 3px;
+  --cta-border: 0;
+  --cta-background: #fff;
+  --cta-color: #192129;
+  --overlay: linear-gradient(
+    0deg,
+    rgb(0 0 0 / 81%) 0%,
+    rgb(0 0 0 / 37%) 60%,
+    rgb(0 0 0 / 8%) 100%
+  );
+}
+/* 320x100: faixa curta, headline e CTA lado a lado. */
+.size-320x100 {
+  --logo-offset-top: -4px;
+  --logo-offset-left: -1px;
+  --logo-width: 94px;
+  --logo-max-height: 19px;
+  --content-inset: 9px 13px;
+  --content-justify: stretch;
+  --content-align: center;
+  --flex-direction: column;
+  --text-align: left;
+  --content-gap: 0;
+  --headline-width: 205px;
+  --headline-size: 17px;
+  --headline-leading: 1.05;
+  --headline-spacing: -0.1px;
+  --cta-height: 28px;
+  --cta-padding: 0 9px;
+  --cta-size: 9px;
+  --cta-radius: 2px;
+  --cta-border: 0;
+  --cta-background: #fff;
+  --cta-color: #192129;
+  --overlay: linear-gradient(90deg, rgb(0 0 0 / 77%) 0%, rgb(0 0 0 / 38%) 100%);
+}
+.size-320x100 .content {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: 8px;
+  row-gap: 0;
+  justify-content: stretch;
+  align-items: center;
+}
+.size-320x100 .brand-logo {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: center;
+  justify-self: start;
+}
+.size-320x100 .headline {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  max-width: 100%;
+  align-self: center;
+}
+.size-320x100 .cta {
+  grid-column: 1;
+  grid-row: 2;
+  align-self: center;
+  justify-self: start;
+}
+
+    </style>
+  </head>
+  <body class="size-300x250" style="--video-specific-extra-top: 0px; --video-specific-extra-bottom: 0px">
+    <a
+      class="click-through"
+      href="javascript:window.open(window.clickTag, '_blank')"
+      aria-label="Antes de construir, faça sentir. — Explore o portfólio"
+    >
+      <div id="container">
+        <video
+          class="background-video"
+          autoplay
+          muted
+          loop
+          playsinline
+          aria-hidden="true"
+        >
+          <source src="video.mp4" type="video/mp4" />
+        </video>
+        <div class="content">
+          <img class="brand-logo" src="logo.gif" alt="Improov" />
+          <h1 class="headline">Antes de construir, faça sentir.</h1>
+          <span class="cta">Explore o portfólio</span>
+        </div>
+      </div>
+    </a>
+  </body>
+</html>

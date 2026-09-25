@@ -1,0 +1,18 @@
+{
+  "name": "improov-html5-creative-generator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Gerador local de criativos HTML5 a partir de vídeos, frases e CTAs.",
+  "scripts": {
+    "config:check": "node scripts/check-config.js",
+    "videos": "node scripts/render-videos.js",
+    "videos:728x90": "node scripts/render-videos.js --size 728x90",
+    "videos:v04": "node scripts/render-videos.js --video V04",
+    "generate": "node scripts/generate.js",
+    "preview": "node scripts/generate-preview.js",
+    "preview:design": "node scripts/generate-design-preview.js",
+    "validate": "node scripts/validate.js",
+    "package": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/package.ps1",
+    "build": "npm run config:check && npm run videos && npm run generate && npm run preview && npm run validate && npm run package"
+  }
+}
