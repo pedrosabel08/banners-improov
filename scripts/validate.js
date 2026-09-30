@@ -93,19 +93,23 @@ function main() {
             css: null,
             video: null,
             logo: null,
+            poster: null,
+            backup: null,
             total: null,
           });
           continue;
         }
         const htmlBytes = fileSize(directory, "index.html");
         const videoBytes = fileSize(directory, "video.mp4");
-        const logoBytes = fileSize(directory, "logo.gif");
+        const logoBytes = fileSize(directory, "logo.png");
+        const posterBytes = fileSize(directory, "poster.jpg");
+        const backupBytes = fileSize(directory, "backup.jpg");
         if (htmlBytes === null)
           creativeErrors.push("index.html não encontrado");
         if (videoBytes === null)
           creativeErrors.push("video.mp4 não encontrado");
         if (logoBytes === null)
-          creativeErrors.push("logo.gif não encontrado");
+          creativeErrors.push("logo.png não encontrado");
         const html =
           htmlBytes === null
             ? ""
@@ -137,8 +141,17 @@ function main() {
           creativeErrors.push("CTA ausente");
         if (!/<source\s+src="video\.mp4"/i.test(html))
           creativeErrors.push("referência local a video.mp4 ausente");
-        if (!/<img\b[^>]*src="logo\.gif"/i.test(html))
-          creativeErrors.push("referência local a logo.gif ausente");
+        if (!/<img\b[^>]*src="logo\.png"/i.test(html))
+          creativeErrors.push("referência local a logo.png ausente");
+        if (/<video\b[^>]*\bloop(?:\s|>)/i.test(html))
+          creativeErrors.push("loop de vídeo não permitido");
+        const fixedBodySize = html.match(/<body\b[^>]*\bstyle="[^"]*\bwidth:\s*(\d+)px;\s*height:\s*(\d+)px/i);
+        if (!fixedBodySize || Number(fixedBodySize[1]) !== size.width || Number(fixedBodySize[2]) !== size.height)
+          creativeErrors.push("dimensões fixas ausentes ou incorretas");
+        if (!html.includes('class="headline-phrase"'))
+          creativeErrors.push("animação das frases ausente");
+        if (posterBytes === null) creativeErrors.push("poster.jpg ausente");
+        if (backupBytes === null) creativeErrors.push("backup.jpg ausente");
         if (!fs.existsSync(path.join(SOURCE_ASSET_DIR, config.logo.file)))
           creativeErrors.push(`asset original da logo ausente: ${config.logo.file}`);
         if (
@@ -181,8 +194,10 @@ function main() {
           css: cssBytes,
           video: videoBytes,
           logo: logoBytes,
-          total: [htmlBytes, videoBytes, logoBytes].every(Number.isFinite)
-            ? htmlBytes + videoBytes + logoBytes
+          poster: posterBytes,
+          backup: backupBytes,
+          total: [htmlBytes, videoBytes, logoBytes, posterBytes, backupBytes].every(Number.isFinite)
+            ? htmlBytes + videoBytes + logoBytes + posterBytes + backupBytes
             : null,
         });
       }
@@ -202,7 +217,7 @@ function main() {
   const reportPath = path.join(ROOT, "preview", "validation-report.csv");
   fs.mkdirSync(path.dirname(reportPath), { recursive: true });
   const csvRows = [
-    "creative_id,html_bytes,css_bytes,video_bytes,logo_bytes,total_bytes",
+    "creative_id,html_bytes,css_bytes,video_bytes,logo_bytes,poster_bytes,backup_bytes,total_bytes",
     ...measurements.map((row) =>
       [
         row.id,
@@ -210,6 +225,8 @@ function main() {
         row.css ?? "",
         row.video ?? "",
         row.logo ?? "",
+        row.poster ?? "",
+        row.backup ?? "",
         row.total ?? "",
       ].join(","),
     ),
@@ -225,7 +242,7 @@ function main() {
     const sum = (key) =>
       measurements.reduce((total, item) => total + (item[key] || 0), 0);
     console.log(
-      `Pesos agregados — HTML (inclui CSS): ${bytesLabel(sum("html"))} | CSS inline: ${bytesLabel(sum("css"))} | vídeos: ${bytesLabel(sum("video"))} | logos: ${bytesLabel(sum("logo"))} | total: ${bytesLabel(sum("total"))}`,
+      `Pesos agregados — HTML (inclui CSS): ${bytesLabel(sum("html"))} | CSS inline: ${bytesLabel(sum("css"))} | vídeos: ${bytesLabel(sum("video"))} | logos: ${bytesLabel(sum("logo"))} | posters: ${bytesLabel(sum("poster"))} | backups: ${bytesLabel(sum("backup"))} | total: ${bytesLabel(sum("total"))}`,
     );
     console.log(`Detalhamento por criativo: ${reportPath}`);
   }

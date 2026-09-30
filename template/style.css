@@ -44,7 +44,7 @@ body {
   object-position: top;
 }
 .brand-logo {
-  /* position: absolute; */
+  position: relative;
   z-index: 1;
   top: var(--logo-offset-top);
   left: var(--logo-offset-left);
@@ -52,6 +52,15 @@ body {
   max-height: var(--logo-max-height);
   object-fit: contain;
   filter: drop-shadow(0 1px 3px rgb(0 0 0 / 75%));
+  opacity: 0;
+  transform: translateY(8px);
+  animation: logo-entry 0.65s ease-out 0.15s both;
+}
+@keyframes logo-entry {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 #container::after {
   content: "";
@@ -80,6 +89,35 @@ body {
   letter-spacing: var(--headline-spacing);
   text-wrap: pretty;
   text-shadow: 0 1px 3px rgb(0 0 0 / 32%);
+}
+.headline-sequence {
+  display: flex;
+  flex-direction: column;
+  gap: 0.08em;
+}
+.headline-phrase {
+  display: block;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: headline-reveal 0.65s ease-out var(--phrase-delay, 0s) both;
+}
+@keyframes headline-reveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .brand-logo {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+  .headline-phrase {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
 }
 .cta {
   display: inline-flex;

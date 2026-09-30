@@ -33,6 +33,34 @@ function safeScriptJson(value) {
     .replaceAll("&", "\\u0026");
 }
 
+function splitHeadlinePhrases(headline) {
+  return (
+    headline.match(/[^.!?]+(?:[.!?]+|$)/g)?.map((phrase) => phrase.trim()).filter(Boolean) ||
+    [headline]
+  );
+}
+
+function animatedHeadline(headline) {
+  return splitHeadlinePhrases(headline)
+    .map(
+      (phrase, index) =>
+        `<span class="headline-phrase" style="--phrase-delay: ${index * 0.9}s">${htmlEscape(phrase)}</span>`,
+    )
+    .join("");
+}
+
+function cssForSize(css, sizeId) {
+  const sections = [
+    ...css.matchAll(/\/\*\s*(\d+x\d+):[^\r\n]*\*\//g),
+  ].filter((match) => match[1] in { '300x250': 1, '728x90': 1, '320x480': 1, '970x250': 1, '300x600': 1, '320x100': 1 });
+  const selected = sections.find((section) => section[1] === sizeId);
+  if (!selected) throw new Error(`Bloco CSS ausente para ${sizeId}.`);
+  const start = selected.index;
+  const nextSection = sections.find((section) => section.index > start);
+  const end = nextSection ? nextSection.index : css.length;
+  return `${css.slice(0, sections[0].index)}\n${css.slice(start, end)}`;
+}
+
 function generateCreative(
   video,
   text,
@@ -62,9 +90,9 @@ function generateCreative(
     CLICK_TAG: safeScriptJson(config.clickTag),
     VIDEO_OVERSCAN_TOP: String((config.videoHeightOffsets?.[video.id] || 0) / 2),
     VIDEO_OVERSCAN_BOTTOM: String((config.videoHeightOffsets?.[video.id] || 0) / 2),
-    CSS: css,
+    CSS: cssForSize(css, size.id),
     ARIA_LABEL: htmlEscape(`${text.headline} — ${text.cta}`),
-    HEADLINE: htmlEscape(text.headline),
+    HEADLINE: animatedHeadline(text.headline),
     CTA: htmlEscape(text.cta),
     LOGO_ALT: htmlEscape(config.logo.alt),
   });
@@ -72,9 +100,21 @@ function generateCreative(
   // O CSS é embutido no HTML; cada pasta fica independente do ponto de vista dos assets.
   // O MP4 processado é copiado para permitir empacotamento de cada anúncio isoladamente.
   fs.copyFileSync(renderedVideo, path.join(directory, "video.mp4"));
+  for (const [filename, suffix] of [
+    ["poster.jpg", "poster"],
+    ["backup.jpg", "backup"],
+  ]) {
+    const source = path.join(
+      RENDERED_VIDEO_DIR,
+      `${video.id}_${size.id}_${suffix}.jpg`,
+    );
+    if (!fs.existsSync(source))
+      throw new Error(`Imagem de fallback ausente para ${id}: ${source}`);
+    fs.copyFileSync(source, path.join(directory, filename));
+  }
   fs.copyFileSync(
     path.join(SOURCE_ASSET_DIR, config.logo.file),
-    path.join(directory, "logo.gif"),
+    path.join(directory, "logo.png"),
   );
   console.log(`[${index}/${total}] Criando ${id}`);
 }

@@ -1,7 +1,7 @@
 {
   "clickTag": "https://improov.com.br/",
   "logo": {
-    "file": "IMPROOV_TOP.gif",
+    "file": "IMPROOV_TOP.png",
     "alt": "Improov"
   },
   "videos": [
@@ -63,6 +63,7 @@
   },
   "render": {
     "crf": 21,
+    "fps": 30,
     "preset": "medium"
   }
 }

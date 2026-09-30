@@ -50,8 +50,12 @@ function renderVideo(video, size, config, index, total) {
     "-y",
     "-i",
     sourcePath,
+    "-t",
+    "30",
     "-vf",
     filter,
+    "-r",
+    String(config.render?.fps || 30),
     "-c:v",
     "libx264",
     "-preset",
@@ -80,6 +84,44 @@ function renderVideo(video, size, config, index, total) {
   }
   if (!fs.existsSync(outputPath) || fs.statSync(outputPath).size === 0)
     throw new Error(`Arquivo de saída ausente ou vazio: ${outputPath}`);
+
+  const cropTop =
+    (size.videoHeight ? (size.videoHeight - size.height) / 2 : 0) +
+    (config.videoHeightOffsets?.[video.id] || 0) / 2;
+  const posterPath = path.join(
+    RENDERED_VIDEO_DIR,
+    `${video.id}_${size.id}_poster.jpg`,
+  );
+  const backupPath = path.join(
+    RENDERED_VIDEO_DIR,
+    `${video.id}_${size.id}_backup.jpg`,
+  );
+  for (const [targetPath, filter] of [
+    [posterPath, null],
+    [backupPath, `crop=${size.width}:${size.height}:0:${cropTop}`],
+  ]) {
+    const imageArgs = [
+      "-hide_banner",
+      "-loglevel",
+      "error",
+      "-y",
+      "-i",
+      outputPath,
+    ];
+    if (filter) imageArgs.push("-vf", filter);
+    imageArgs.push("-frames:v", "1", "-q:v", "3", targetPath);
+    const imageResult = spawnSync("ffmpeg", imageArgs, {
+      encoding: "utf8",
+      windowsHide: true,
+      maxBuffer: 8 * 1024 * 1024,
+    });
+    if (imageResult.error || imageResult.status !== 0)
+      throw new Error(
+        `FFmpeg falhou ao criar ${path.basename(targetPath)} para ${video.id} → ${size.id}: ${(imageResult.stderr || imageResult.error?.message || "erro sem detalhes").trim()}`,
+      );
+    if (!fs.existsSync(targetPath) || fs.statSync(targetPath).size === 0)
+      throw new Error(`Imagem de fallback ausente ou vazia: ${targetPath}`);
+  }
 }
 
 try {

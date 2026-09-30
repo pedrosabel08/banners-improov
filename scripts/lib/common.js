@@ -156,6 +156,13 @@ function validateConfig(config) {
       config.render.crf > 51)
   )
     errors.push("render.crf deve ser inteiro entre 0 e 51.");
+  if (
+    config.render?.fps !== undefined &&
+    (!Number.isInteger(config.render.fps) ||
+      config.render.fps < 1 ||
+      config.render.fps > 60)
+  )
+    errors.push("render.fps deve ser inteiro entre 1 e 60.");
   return errors;
 }
 

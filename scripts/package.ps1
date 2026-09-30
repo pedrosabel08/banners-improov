@@ -1,7 +1,7 @@
 <#
 package.ps1
 Gera um ZIP independente para cada criativo. Cada arquivo contém somente
-index.html, video.mp4 e logo.gif daquele anúncio.
+index.html, video.mp4, poster.jpg, backup.jpg e logo.png daquele anúncio.
 #>
 $ErrorActionPreference = 'Stop'
 $ProjectRoot = Split-Path -Parent $PSScriptRoot
@@ -16,7 +16,7 @@ foreach ($creativeDirectory in $creativeDirectories) {
     $index++
     $zipPath = Join-Path $PackageDirectory ($creativeDirectory.Name + '.zip')
     if (Test-Path -LiteralPath $zipPath) { Remove-Item -LiteralPath $zipPath -Force }
-    Compress-Archive -LiteralPath (Join-Path $creativeDirectory.FullName 'index.html'), (Join-Path $creativeDirectory.FullName 'video.mp4'), (Join-Path $creativeDirectory.FullName 'logo.gif') -DestinationPath $zipPath
+    Compress-Archive -LiteralPath (Join-Path $creativeDirectory.FullName 'index.html'), (Join-Path $creativeDirectory.FullName 'video.mp4'), (Join-Path $creativeDirectory.FullName 'poster.jpg'), (Join-Path $creativeDirectory.FullName 'backup.jpg'), (Join-Path $creativeDirectory.FullName 'logo.png') -DestinationPath $zipPath
     Write-Host "[$index/180] ZIP criado: $($creativeDirectory.Name).zip"
 }
 Write-Host "`nPacotes criados: $index/180 em packages/."

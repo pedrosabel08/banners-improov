@@ -12,7 +12,7 @@
       {{CSS}}
     </style>
   </head>
-  <body class="size-{{SIZE_ID}}" style="--video-specific-extra-top: {{VIDEO_OVERSCAN_TOP}}px; --video-specific-extra-bottom: {{VIDEO_OVERSCAN_BOTTOM}}px">
+  <body class="size-{{SIZE_ID}}" style="width: {{WIDTH}}px; height: {{HEIGHT}}px; --video-specific-extra-top: {{VIDEO_OVERSCAN_TOP}}px; --video-specific-extra-bottom: {{VIDEO_OVERSCAN_BOTTOM}}px">
     <a
       class="click-through"
       href="javascript:window.open(window.clickTag, '_blank')"
@@ -23,15 +23,14 @@
           class="background-video"
           autoplay
           muted
-          loop
           playsinline
           aria-hidden="true"
         >
           <source src="video.mp4" type="video/mp4" />
         </video>
         <div class="content">
-          <img class="brand-logo" src="logo.gif" alt="{{LOGO_ALT}}" />
-          <h1 class="headline">{{HEADLINE}}</h1>
+          <img class="brand-logo" src="logo.png" alt="{{LOGO_ALT}}" />
+          <h1 class="headline headline-sequence">{{HEADLINE}}</h1>
           <span class="cta">{{CTA}}</span>
         </div>
       </div>

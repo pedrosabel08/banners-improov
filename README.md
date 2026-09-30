@@ -22,21 +22,21 @@ ffmpeg -version
 ```text
 source/
   videos/                 Cópias locais dos cinco vídeos de entrada
-  assets/                 Logo original IMPROOV_TOP.gif
+  assets/                 Logo original em GIF e versão estática otimizada em PNG
   config.json             ClickTag, frases, formatos e focal points
 template/
   index.html              Único template HTML; recebe o CSS inline na geração
   style.css               CSS base e os seis presets, embutidos em cada anúncio
 scripts/
   check-config.js         Verifica entradas e configuração
-  render-videos.js        Gera uma versão de vídeo por vídeo/formato
+  render-videos.js        Gera MP4s limitados a 30 s, a 30 fps, além dos posters e fundos de backup
   generate.js             Gera os anúncios em dist/
   generate-preview.js     Monta a revisão visual em preview/
   validate.js             Confere os 180 anúncios e seus pesos
-  package.ps1             Empacota cada anúncio em um ZIP individual
+  generate-backups.ps1    Monta uma imagem final completa para cada criativo
   lib/common.js           Caminhos e validações compartilhados
-rendered-videos/          30 MP4 processados, reutilizados pelos textos
-dist/                     180 pastas com index.html (CSS inline), video.mp4 e logo.gif
+rendered-videos/          30 MP4s processados, posters e imagens de backup para os formatos
+dist/                     180 pastas com index.html (CSS inline), video.mp4, poster.jpg, backup.jpg e logo.png
 preview/                  Página de revisão e relatório de pesos CSV
 packages/                 ZIPs opcionais, um arquivo por anúncio
 frases.html               Referência fornecida com as seis frases e CTAs
@@ -50,10 +50,10 @@ Abra `source/config.json` para alterar todo o conteúdo de campanha:
 
 - **Frases e CTAs:** edite `texts`; há seis itens identificados de `F01` a `F06`. O texto inicial corresponde a `frases.html`.
 - **Destino do clique:** altere somente `clickTag`. O anúncio inteiro é um link e abre esse destino.
-- **Logo:** `logo.file` seleciona o GIF em `source/assets/`; `logo.alt` define o texto alternativo. O gerador o inclui em cada criativo como `logo.gif`. O arquivo atual tem 1830×396 px e sua animação permanece em GIF.
+- **Logo:** `logo.file` seleciona a imagem PNG estática em `source/assets/`; cada criativo recebe `logo.png`, cuja entrada é animada por CSS.
 - **Vídeos:** cada item de `videos` associa um ID (`V01`–`V05`) ao nome do arquivo dentro de `source/videos/`.
 - **Dimensões:** `sizes` lista os seis formatos suportados. O ID precisa ser `largura x altura`, sem espaços, como `300x250`.
-- **Qualidade de vídeo:** `render.crf` controla a qualidade/tamanho H.264 (valor menor dá mais qualidade e arquivos maiores); `render.preset` controla o tempo de codificação.
+- **Qualidade de vídeo:** `render.crf` controla a qualidade/tamanho H.264, `render.preset` controla o tempo de codificação e `render.fps` define a saída em 30 quadros por segundo.
 - **Altura do vídeo processado:** um formato pode definir `videoHeight` acima da altura visível do anúncio. Para 728×90, a saída de vídeo mede 728×120; o CSS desloca o vídeo 15 px para cima e o contêiner recorta o excedente. A área e a meta do anúncio continuam em 728×90.
 - **Acréscimo por vídeo:** `videoHeightOffsets` soma pixels à altura processada de todas as dimensões daquele vídeo. Atualmente V04 (`fg-talls-f-1-1080.mp4`) soma 80 px; em 728×90, isso se soma aos 30 px extras do formato e resulta em vídeo 728×200.
 
@@ -78,7 +78,7 @@ Os valores são percentuais de **posição dentro do excesso que será cortado**
 
 `template/style.css` contém as regras comuns e os presets `.size-300x250`, `.size-728x90`, `.size-320x480`, `.size-970x250`, `.size-300x600` e `.size-320x100`. Cada preset define posição, alinhamento, largura e escala do texto, line-height, CTA, margens, espaçamento, gradiente e posição/tamanho da logo (`--logo-offset-top`, `--logo-offset-left`, `--logo-width`). Os offsets da logo são relativos à caixa `.content`. Ajuste os valores nesse arquivo para atualizar todos os anúncios daquele formato na próxima geração. `template/index.html` é o único template: o gerador substitui dimensão, classe, headline, CTA, logo e ClickTag.
 
-Cada pasta `dist/Vxx_Fxx_DIMENSÃO/` inclui apenas `index.html` (com CSS dentro de uma tag `<style>`) e seu próprio `video.mp4`, sem CDN, fonte remota, API, biblioteca externa ou stylesheet separado. A tag `<meta name="ad.size">` informa o formato; `clickTag` fica configurável globalmente no JSON.
+Cada pasta `dist/Vxx_Fxx_DIMENSAO/` contém index.html com CSS inline, video.mp4, poster.jpg, backup.jpg e logo.png. O vídeo de fundo toca uma vez, sem loop. A entrada da logo estática e das frases é animada em CSS. Não há CDN, fonte remota, API, biblioteca externa ou stylesheet separado. A tag `<meta name="ad.size">` informa o formato; `clickTag` fica configurável globalmente no JSON.
 
 ## Executar
 
@@ -91,10 +91,14 @@ npm.cmd run build
 O build executa em sequência e para se uma etapa falhar:
 
 1. Valida o config, os cinco vídeos de entrada e as dimensões.
-2. Gera 30 arquivos em `rendered-videos/` — uma vez por vídeo e formato.
-3. Gera 180 anúncios em `dist/` — as seis versões de frase reaproveitam cada MP4 renderizado.
-4. Gera `preview/index.html`.
-5. Valida quantidade, arquivos, meta, clickTag, frase, CTA, referência de mídia e tamanho.
+2. Gera 30 MP4s em `rendered-videos/`, a 30 fps e até 30 s, com um poster e um fundo de backup por formato.
+3. Gera 180 anúncios em `dist/`, reaproveitando cada MP4 para as seis frases; cada anúncio inclui somente o CSS do próprio formato.
+4. Cria 180 imagens estáticas de backup com fundo, logo, headline e CTA.
+5. Gera `preview/index.html`.
+6. Confere quantidades, arquivos, dimensões, meta, clickTag, animação e referências locais.
+7. Cria 180 ZIPs individuais.
+
+
 
 Também é possível executar etapas separadamente:
 
@@ -102,6 +106,7 @@ Também é possível executar etapas separadamente:
 npm.cmd run config:check
 npm.cmd run videos
 npm.cmd run generate
+npm.cmd run backups
 npm.cmd run preview
 npm.cmd run preview:design
 npm.cmd run validate
@@ -115,7 +120,7 @@ Para ajustar o layout **antes de gerar os 180 criativos**, edite `template/style
 
 ## Validação e pesos
 
-O validador confirma as 180 combinações esperadas, verifica cada pasta e lista eventuais erros com o ID do criativo. `preview/validation-report.csv` detalha HTML, CSS inline, vídeo e logo por anúncio. O CSS está incluído no tamanho de HTML, portanto o total soma HTML, vídeo e logo sem contar o CSS duas vezes. Não há limite de peso predefinido: o relatório permite comparar os pacotes com a especificação da plataforma de mídia.
+O validador confirma as 180 combinações esperadas, verifica cada pasta e lista eventuais erros com o ID do criativo. `preview/validation-report.csv` detalha HTML/CSS inline, vídeo, logo, poster e backup por anúncio. O CSS está incluído no tamanho de HTML, portanto o total soma cada arquivo uma única vez. Não há limite de peso predefinido: o relatório permite comparar os pacotes com a especificação da plataforma de mídia.
 
 ## ZIPs individuais
 
@@ -125,4 +130,5 @@ O build gera automaticamente os 180 ZIPs, um por criativo. Execute este comando 
 npm.cmd run package
 ```
 
-Cada ZIP contém somente index.html, video.mp4 e logo.gif daquele criativo.
+Cada ZIP contém index.html, video.mp4, poster.jpg, backup.jpg e logo.png do criativo.
+Para visualizar o anúncio, extraia o ZIP e abra `index.html` no navegador; ele será exibido nas dimensões do formato (por exemplo, 300×250). O `video.mp4` isolado contém apenas o vídeo de fundo, sem texto nem logo.
